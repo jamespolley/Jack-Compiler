@@ -1,4 +1,4 @@
-# TO DO: fix bug where last token is ignored
+# TO DO: fix bug where last token is ignored, or character immediately after is ignored
 
 class Tokenizer:
 
@@ -10,6 +10,8 @@ class Tokenizer:
     STRING_CONSTANT = 4
 
     SYMBOLS = r"{}()[].,+-*/&|<>=~"
+    KEYWORDS = [
+        "class", "constructor", "function", "method", "field", "static", "var", "int", "char", "boolean", "void", "true","false", "null", "this", "let", "do", "if", "else", "while", "return"]
 
     def __init__(self, file):
         self.file = file
@@ -19,7 +21,7 @@ class Tokenizer:
         self.token_type = None # to implement
         
     
-    def get_next_token(self):
+    def advance(self):
         self.token = None
         while (self.token == None) and self.has_more_chars():
             # Ignore whitespace and comments
@@ -66,44 +68,53 @@ class Tokenizer:
                 self.i += 1
                 return
             self.i += 1
-
     
     def process_keyword_or_identifier(self):
         # Refactor???
         start = self.i
         while self.has_more_chars():
-            if not self.file[start : self.i+2].isidentifier():
-                break
+            if not self.file[start : self.i+2].isidentifier(): break
             self.i += 1
         self.token = self.file[start : self.i+1]
+        if self.token in self.KEYWORDS: self.token_type = self.KEYWORD
+        else: self.token_type = self.IDENTIFIER
 
     def process_symbol(self):
         self.token = self.file[self.i]
+        self.token_type = self.SYMBOL
+        self.i += 1
 
     def process_integer_constant(self):
         start = self.i
         self.i += 1
         while self.has_more_chars():
             if not self.file[self.i].isdigit():
-                self.token = self.file[start : self.i+1]
-                return
+                break
             self.i += 1
+        self.token = self.file[start : self.i]
+        self.token_type = self.INT_CONSTANT
 
     def process_string_constant(self):
         start = self.i
         self.i += 1
         while self.has_more_chars():
             if self.file[self.i] == '"':
-                self.token = self.file[start : self.i+1]
+                self.i += 1
+                self.token = self.file[start : self.i]
+                self.token_type = self.STRING_CONSTANT
                 return
-            self.i+=1
+            self.i += 1
+        raise Exception("Unexpected end of file: expected to read '\"'")
+        
 
 
 
 
 
 # Test
-t = Tokenizer(' asdff_{}34 //    \n asdff9 "token"  445   /* asdf 99*/ qwer')
+t = Tokenizer(' asdff_{}34- //    \n asdff9 "token"  445   /* asdf 99 */ qwer "last_token"{} 999 asdf')
+
 while t.has_more_chars():
-    t.get_next_token()
+    t.advance()
     print(t.token)
+    print(t.token_type)
