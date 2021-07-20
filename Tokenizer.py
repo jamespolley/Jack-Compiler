@@ -18,14 +18,15 @@ class Tokenizer:
         self.i = 0
         self.length = len(self.file)
         self.token = None
-        self.token_type = None # to implement
+        self.token_type = None
         
     
     def advance(self):
         self.token = None
         while (self.token == None) and self.has_more_chars():
             # Ignore whitespace and comments
-            if self.file[self.i] == " ": pass
+            if self.file[self.i] == " ":
+                self.i += 1
             elif self.file[self.i : self.i+2] == "//":
                 self.ignore_line_comment()
             elif self.file[self.i : self.i+2] == "/*":
@@ -46,9 +47,9 @@ class Tokenizer:
                 self.process_string_constant()
             
             else:
-                # print(self.file[self.i])
-                pass
-            self.i += 1
+                raise Exception(
+                    "Unexpected character: unable to process '{}'"\
+                    .format(self.file[self.i]))
 
     
     def has_more_chars(self):
@@ -58,6 +59,7 @@ class Tokenizer:
         self.i += 2
         while self.has_more_chars():
             if self.file[self.i] == "\n":
+                self.i += 1
                 return
             self.i += 1
 
@@ -65,17 +67,18 @@ class Tokenizer:
         self.i += 2
         while self.has_more_chars():
             if self.file[self.i : self.i+2] == "*/":
-                self.i += 1
+                self.i += 2
                 return
             self.i += 1
     
     def process_keyword_or_identifier(self):
         # Refactor???
         start = self.i
+        self.i += 1
         while self.has_more_chars():
-            if not self.file[start : self.i+2].isidentifier(): break
+            if not self.file[start : self.i+1].isidentifier(): break
             self.i += 1
-        self.token = self.file[start : self.i+1]
+        self.token = self.file[start : self.i]
         if self.token in self.KEYWORDS: self.token_type = self.KEYWORD
         else: self.token_type = self.IDENTIFIER
 
@@ -112,9 +115,9 @@ class Tokenizer:
 
 
 # Test
-t = Tokenizer(' asdff_{}34- //    \n asdff9 "token"  445   /* asdf 99 */ qwer "last_token"{} 999 asdf')
+# t = Tokenizer(' asdff_{}34- //    \n asdff9 "token"  445   /* asdf 99 */ qwer "last_token"{} 999 asdf')
 
-while t.has_more_chars():
-    t.advance()
-    print(t.token)
-    print(t.token_type)
+# while t.has_more_chars():
+#     t.advance()
+#     print(t.token)
+#     print(t.token_type)
