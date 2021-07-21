@@ -1,8 +1,5 @@
-# TO DO: fix bug where last token is ignored, or character immediately after is ignored
-
 class Tokenizer:
 
-    # to do - set token type when get_next_token() is called
     KEYWORD = 0
     IDENTIFIER = 1
     SYMBOL = 2
@@ -19,8 +16,7 @@ class Tokenizer:
         self.length = len(self.file)
         self.token = None
         self.token_type = None
-        
-    
+
     def advance(self):
         self.token = None
         while (self.token == None) and self.has_more_chars():
@@ -51,7 +47,6 @@ class Tokenizer:
                     "Unexpected character: unable to process '{}'"\
                     .format(self.file[self.i]))
 
-    
     def has_more_chars(self):
         return self.i < self.length
     
@@ -79,8 +74,10 @@ class Tokenizer:
             if not self.file[start : self.i+1].isidentifier(): break
             self.i += 1
         self.token = self.file[start : self.i]
-        if self.token in self.KEYWORDS: self.token_type = self.KEYWORD
-        else: self.token_type = self.IDENTIFIER
+        if self.token in self.KEYWORDS:
+            self.token_type = self.KEYWORD
+        else:
+            self.token_type = self.IDENTIFIER
 
     def process_symbol(self):
         self.token = self.file[self.i]
@@ -108,16 +105,3 @@ class Tokenizer:
                 return
             self.i += 1
         raise Exception("Unexpected end of file: expected to read '\"'")
-        
-
-
-
-
-
-# Test
-# t = Tokenizer(' asdff_{}34- //    \n asdff9 "token"  445   /* asdf 99 */ qwer "last_token"{} 999 asdf')
-
-# while t.has_more_chars():
-#     t.advance()
-#     print(t.token)
-#     print(t.token_type)
