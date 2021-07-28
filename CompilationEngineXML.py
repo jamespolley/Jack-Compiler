@@ -1,5 +1,6 @@
-# TO DO - include grammar in docstrings
-# TO DO convert < and > to entity references
+# TO DO
+#   In compile_expression(), any other expression exits??
+#   Move constants/codes to new file
 
 from Tokenizer import Tokenizer
 
@@ -81,7 +82,6 @@ class CompilationEngineXML:
                 self.expect(",")
                 self.expect(("int", "char", "boolean")) # OR className
                 self.expect(self.IDENTIFIER)
-            # return # TO DO ------ method for determining if a type?
         self.close_tag("parameterList")
 
     def compile_subroutine_body(self):
@@ -189,7 +189,7 @@ class CompilationEngineXML:
 
     def compile_expression(self):
         """Compiles an expression."""
-        if self.tokenizer.token in ");": # OTHER EXPRESSION EXITS???!!!
+        if self.tokenizer.token in ";)]":
             return # expression is optional
         self.open_tag("expression")
         self.compile_term()
@@ -241,7 +241,8 @@ class CompilationEngineXML:
             self.expect(self.UNARY_OP)
             self.compile_term()
         else:
-            raise Exception() # TO DO ----------
+            raise Exception(
+            "INVALID TOKEN: unexpected term element '{}'".format(token))
         self.close_tag("term")
 
     def compile_expression_list(self):
@@ -254,10 +255,9 @@ class CompilationEngineXML:
         self.close_tag("expressionList")
 
     def expect(self, expected):
-        """Checks if a token is valid. Is so, generate XML. Advance."""
+        """If token is valid, generates XML. Advances."""
         token = self.tokenizer.token
         token_type = self.tokenizer.token_type
-
         if type(expected) is tuple:
             if not token in expected:
                 if token_type != self.IDENTIFIER:
@@ -277,7 +277,7 @@ class CompilationEngineXML:
         self.tokenizer.advance()
     
     def expect_special(self, token):
-        """Generates XML without checking for validity. Advance."""
+        """Generates XML without checking for validity. Advances."""
         token_type = self.tokenizer.token_type
         self.open_close_tag(self.TAGS[token_type], token)
         self.tokenizer.advance()
