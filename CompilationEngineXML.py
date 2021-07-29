@@ -1,7 +1,6 @@
 # TO DO
 #   In compile_expression(), any other expression exits??
 #   Move constants/codes to new file
-
 from Tokenizer import Tokenizer
 
 
@@ -71,6 +70,7 @@ class CompilationEngineXML:
         self.expect(")")
         self.compile_subroutine_body()
         self.close_tag("subroutineDec")
+        self.compile_subroutine_dec() # for multiple classVarDec
 
     def compile_parameter_list(self):
         """Compiles a (possibly empty) parameter list. Does not handle the enclosing "()"."""
@@ -183,7 +183,7 @@ class CompilationEngineXML:
         self.open_tag("returnStatement")
         self.expect("return")
         if self.tokenizer.token != ";":
-            self.compile_expression_list()
+            self.compile_expression()
         self.expect(";")
         self.close_tag("returnStatement")
 
@@ -197,6 +197,7 @@ class CompilationEngineXML:
             token = self.tokenizer.token
             if token == "<": self.expect_special("&lt;")
             elif token == ">": self.expect_special("&gt;")
+            elif token == "&": self.expect_special("&amp;")
             else: self.expect(self.OP)
             self.compile_term()
         self.close_tag("expression")
@@ -211,7 +212,7 @@ class CompilationEngineXML:
             self.expect(self.INT_CONSTANT)
         elif token_type == self.STRING_CONSTANT:
             self.expect(self.STRING_CONSTANT)
-        elif token_type in self.KEYWORD_CONSTANT:
+        elif token in self.KEYWORD_CONSTANT:
             self.expect(self.KEYWORD)
         elif token_type == self.IDENTIFIER:
             self.expect(self.IDENTIFIER)
@@ -284,7 +285,7 @@ class CompilationEngineXML:
 
     def open_tag(self, tag_name):
         """Generates an open XML tag."""
-        tag = "{0}<{1}>\n".format("\t"*self.tab_level, tag_name)
+        tag = "{0}<{1}>\n".format("  "*self.tab_level, tag_name)
         self.xml.append(tag)
         self.tab_level += 1
     
@@ -292,11 +293,11 @@ class CompilationEngineXML:
         """Generates a close XML tag."""
         self.tab_level -= 1
         self.xml.append(
-            "{0}</{1}>\n".format("\t"*self.tab_level, tag_name))
+            "{0}</{1}>\n".format("  "*self.tab_level, tag_name))
     
     def open_close_tag(self, tag_name, value=" "):
         """Generates open and close XML tags on a single line."""
         if value != " ": value = " {} ".format(value)
         self.xml.append(
             "{0}<{1}>{2}</{1}>\n".format(
-                "\t"*self.tab_level, tag_name, value))
+                "  "*self.tab_level, tag_name, value))
