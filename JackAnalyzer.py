@@ -1,34 +1,39 @@
 # TO DO
 #   Allow command line execution of JackAnalyzer
 #   Create docstrings
-from CompilationEngineXML import CompilationEngineXML
+from ParserXML import ParserXML
 import sys
 import os
 
 
 class JackAnalyzer:
+    """
+    Main analyzer class. Accepts a file or directory path as an input. Drives analysis process and writes to output file(s).
+    """
+    
     def __init__(self, input, output_file_tag = ""):
         self.jack_files = self.get_files(input)
         self.xml_files = []
         self.output_file_tag = output_file_tag
-        self.comp_eng = None
+        self.parser = None
     
     def analyze(self):
+        """Reads Jack file(s), drives analysis process, and writes to XML file(s)."""
         for jack_file in self.jack_files:
             with open(jack_file, 'r', encoding='utf-8') as f:
                 raw_code = f.read()
-                self.comp_eng = CompilationEngineXML(raw_code)
-                self.comp_eng.compile()
+                self.parser = ParserXML(raw_code)
+                self.parser.compile()
             xml_file = self.get_output_file(
                 jack_file, self.output_file_tag)
             with open(xml_file, "w", encoding='utf-8') as f:
-                for line in self.comp_eng.xml:
+                for line in self.parser.xml:
                     f.write(line)
             self.xml_files.append(xml_file)
-
     
     @staticmethod
     def get_files(file_or_directory_path):
+        """Returns a list of files, given either a relative file or directory path."""
         jack_files = []
         if os.path.isdir(file_or_directory_path):
             directory = os.listdir(file_or_directory_path)
@@ -47,4 +52,5 @@ class JackAnalyzer:
     
     @staticmethod
     def get_output_file(jack_file, file_tag=""):
+        """Returns the .xml file path that corresponds with a given Jack file. A file tag can be added (e.g. to distinguish from a compare file)."""
         return jack_file[:-5] + file_tag + ".xml"
