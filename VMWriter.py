@@ -46,14 +46,15 @@ class VMWriter(list):
 
 
 # TESTS
-w = VMWriter()
-w.write_push('local', 99)
-w.write_pop('local', 100)
-w.write_arithmetic_logic('add')
-w.write_label('Banana')
-w.write_goto('Banana')
-w.write_if_goto('Banana')
-w.write_call('PeelBanana', 4)
-w.write_function('PeelBanana', 4)
-w.write_return()
-print(w)
+if __name__ == '__main__':
+  w = VMWriter()
+  w.write_push('local', 99)
+  w.write_pop('local', 100)
+  w.write_arithmetic_logic('add')
+  w.write_label('Banana')
+  w.write_goto('Banana')
+  w.write_if_goto('Banana')
+  w.write_call('PeelBanana', 4)
+  w.write_function('PeelBanana', 4)
+  w.write_return()
+  print(w)
