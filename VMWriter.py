@@ -1,4 +1,4 @@
-# TO DO - error handling
+# TO DO - error handling??
 
 class VMWriter(list):
   """
@@ -6,7 +6,6 @@ class VMWriter(list):
   """
 
   def __init__(self):
-    # self.vm_code = []
     pass
   
   def write_push(self, segment, index):
@@ -29,7 +28,7 @@ class VMWriter(list):
     """TO DO"""
     self.append('goto ' + label)
 
-  def write_if_goto(self):
+  def write_if_goto(self, label):
     """TO DO"""
     self.append('if-goto ' + label)
 
@@ -46,9 +45,15 @@ class VMWriter(list):
     self.append('return')
 
 
-
 # TESTS
 w = VMWriter()
-w.write_push("local", 99)
-w.write_pop("local", 100)
+w.write_push('local', 99)
+w.write_pop('local', 100)
+w.write_arithmetic_logic('add')
+w.write_label('Banana')
+w.write_goto('Banana')
+w.write_if_goto('Banana')
+w.write_call('PeelBanana', 4)
+w.write_function('PeelBanana', 4)
+w.write_return()
 print(w)
