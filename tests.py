@@ -20,9 +20,9 @@ for program in files_and_directories:
   ja.analyze()
   for i in range(len(ja.xml_files)):
     analyzed_file = ja.xml_files[i]
-    correct_file = ja.get_output_file(ja.jack_files[i])
-    check = filecmp.cmp(analyzed_file, correct_file, False)
+    compare_file = ja.get_output_file(ja.jack_files[i])
+    check = filecmp.cmp(analyzed_file, compare_file, False)
     outcome = ("FAILED", "PASSED")[check]
     print("Test {0}: {1}".format(test_count, outcome))
-    print("Compared {0} to {1}\n".format(analyzed_file, correct_file))
+    print("Compared {0} to {1}\n".format(analyzed_file, compare_file))
     test_count += 1

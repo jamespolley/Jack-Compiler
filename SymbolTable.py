@@ -1,6 +1,6 @@
 
 
-class SymbolTable():
+class SymbolTable(dict):
   """
   TO DO
   """
@@ -27,8 +27,8 @@ class SymbolTable():
   def index_of(self, name):
     return self.symbols[name][2]
 
-  def kind_count_of(self, name):
-    pass # TO DO, rename???
+  def kind_count_of(self, kind):
+    return self.kind_count[kind]
 
 
 # TEST
@@ -41,6 +41,8 @@ if __name__ == '__main__':
   print(st_class.type_of('Point'))
   print(st_class.kind_of('Point'))
   print(st_class.index_of('Point'))
+  print(st_class.symbols.get("asdf"))
+  print(st_class.symbols.get("Point"))
   print()
   st_subroutine = SymbolTable('subroutine')
   st_subroutine.define("Thing", "char", "VAR")

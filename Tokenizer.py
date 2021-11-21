@@ -2,6 +2,9 @@
 #   Move constants/codes to new file
 
 class Tokenizer:
+    """
+    Advances through raw Jack code, ignores irrelevant characters, separates tokens, and identifies token types.
+    """
 
     KEYWORD = 0
     IDENTIFIER = 1

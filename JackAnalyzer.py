@@ -1,6 +1,3 @@
-# TO DO
-#   Allow command line execution of JackAnalyzer
-#   Create docstrings
 from ParserXML import ParserXML
 import sys
 import os
@@ -11,7 +8,7 @@ class JackAnalyzer:
     Main analyzer class. Accepts a file or directory path as an input. Drives analysis process and writes to output file(s).
     """
     
-    def __init__(self, input, output_file_tag = ""):
+    def __init__(self, input, output_file_tag=""):
         self.jack_files = self.get_files(input)
         self.xml_files = []
         self.output_file_tag = output_file_tag
