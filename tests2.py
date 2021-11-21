@@ -5,8 +5,8 @@ from JackCompiler import JackCompiler
 
 
 file_directories = [
-  "assets2\Seven"
-  # "assets2\ConvertToBin",
+  "assets2\Seven",
+  "assets2\ConvertToBin"
   # "assets2\Square",
   # "assets2\Average",
   # "assets2\Pong",
@@ -23,19 +23,19 @@ print("=============\n")
 print("Test 1: PASSED")
 print("assets2\Seven")
 
-print("Test 2: PASSED")
+print("Test 2: NOT TESTED")
 print("assets2\ConvertToBin")
 
-print("Test 3: PASSED")
+print("Test 3: NOT TESTED")
 print("assets2\Square")
 
-print("Test 4: PASSED")
+print("Test 4: NOT TESTED")
 print("assets2\Average")
 
-print("Test 5: PASSED")
+print("Test 5: NOT TESTED")
 print("assets2\Pong")
 
-print("Test 6: PASSED")
+print("Test 6: NOT TESTED")
 print("assets2\ComplexArrays")
 
 print("\nFor tests, used Nand2Tetris VM Emulator")
